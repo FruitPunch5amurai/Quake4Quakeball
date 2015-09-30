@@ -234,7 +234,7 @@ void rvWeaponGauntlet::Attack ( void ) {
 	ent = gameLocal.entities[tr.c.entityNum];
 
 
-	// Modded -> If the entity is a projectile and the player does not currently have the ball, add the ball to the player's inventory
+	// Modded ->  If the entity is a projectile and the player does not currently have the ball, add the ball to the player's inventory
 	if (ent->IsType( idProjectile::GetClassType() ) && !(owner->inventory.HasAmmo("weapon_rocketlauncher")))
 	{
 		ent->PostEventMS( &EV_Remove, 0 );
