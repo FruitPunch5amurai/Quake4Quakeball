@@ -443,6 +443,7 @@ stateResult_t rvWeaponRocketLauncher::State_Fire ( const stateParms_t& parms ) {
 		STAGE_INIT,
 		STAGE_WAIT,
 	};	
+
 	switch ( parms.stage ) {
 		case STAGE_INIT:
 			nextAttackTime = gameLocal.time + (fireRate * owner->PowerUpModifier ( PMOD_FIRERATE ));		
@@ -462,6 +463,7 @@ stateResult_t rvWeaponRocketLauncher::State_Fire ( const stateParms_t& parms ) {
 			return SRESULT_WAIT;
 	}
 	return SRESULT_ERROR;
+
 }
 
 /*

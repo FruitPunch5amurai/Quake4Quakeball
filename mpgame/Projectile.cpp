@@ -10,6 +10,8 @@
 #include "ai/AI_Manager.h"
 #include "Projectile.h"
 #include "spawner.h"
+#include "Weapon.h" //For spawn
+
 
 /*
 ===============================================================================
@@ -744,18 +746,37 @@ bool idProjectile::Collide( const trace_t &collision, const idVec3 &velocity, bo
  	if ( ( collision.c.material != NULL ) && ( collision.c.material->GetSurfaceFlags() & SURF_NOIMPACT ) ) {
  		PostEventMS( &EV_Remove, 0 );
 		StopEffect( "fx_fly" );
+
 		if( flyEffect)	{
 			//flyEffect->Event_Remove();
 		}
  		return true;
- 	}
+	}else{
+	//Modded-> Spawn rocketlauncher when it hits .
+		idVec3 newDir;
+		physicsObj.SetOrigin( physicsObj.GetOrigin() + idVec3( 0.0f, 0.0f, 32.0f ) );
+			physicsObj.SetAxis( newDir.ToMat3() );
+			launchOrig = physicsObj.GetOrigin();
+		idDict dict;
+		idEntity *newEnt = NULL;
+
+		dict.Set("classname","weapon_rocketlauncher");
+		dict.Set("origin", launchOrig.ToString());
+		gameLocal.SpawnEntityDef(dict,&newEnt);
+		if (newEnt)	{
+		gameLocal.Printf("spawned entity '%s'\n", newEnt->name.c_str());
+	}
+	
+	}
  
 	// get the entity the projectile collided with
+	
 	ent = gameLocal.entities[ collision.c.entityNum ];
 	if ( ent == owner.GetEntity() ) {
 		return true;
 	}
-
+	
+	
  	// just get rid of the projectile when it hits a player in noclip
  	if ( ent->IsType( idPlayer::GetClassType() ) && static_cast<idPlayer *>( ent )->noclip ) {
    		PostEventMS( &EV_Remove, 0 );
