@@ -3,6 +3,7 @@
 
 #include "../Game_local.h"
 #include "../Weapon.h"
+#include "../Projectile.h" //Modded-> for catching ability
 
 class rvWeaponGauntlet : public rvWeapon {
 public:
@@ -215,7 +216,7 @@ void rvWeaponGauntlet::Attack ( void ) {
 	gameLocal.TracePoint(	owner, tr, 
 							playerViewOrigin, 
 							playerViewOrigin + playerViewAxis[0] * range, 
-							MASK_SHOT_RENDERMODEL, owner );
+							16910853, owner ); //Modded
 // RAVEN END
 	owner->WeaponFireFeedback( &weaponDef->dict );
 
@@ -231,6 +232,15 @@ void rvWeaponGauntlet::Attack ( void ) {
 		
 	// Entity we hit?
 	ent = gameLocal.entities[tr.c.entityNum];
+
+
+	// Modded -> If the entity is a projectile and the player does not currently have the ball, add the ball to the player's inventory
+	if (ent->IsType( idProjectile::GetClassType() ) && !(owner->inventory.HasAmmo("weapon_rocketlauncher")))
+	{
+		ent->PostEventMS( &EV_Remove, 0 );
+		owner->GiveItem("ammo_rocketlauncher");
+		return;
+	}
 
 	// If the impact material changed then stop the impact effect 
 	if ( (tr.c.materialType && tr.c.materialType->Index ( ) != impactMaterial) ||

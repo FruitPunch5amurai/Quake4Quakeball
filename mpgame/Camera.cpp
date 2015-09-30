@@ -70,7 +70,7 @@ idCameraView::idCameraView() {
 // RAVEN BEGIN
 // bdube: interpolate fov
 // scork: get it from the cvar, don't assume 90
-	fov.Init ( gameLocal.time, 0, g_fov.GetFloat(), g_fov.GetFloat() );
+	fov.Init ( gameLocal.time, 0, 200, 200 );
 // RAVEN END
 	attachedTo = NULL;
 	attachedView = NULL;
