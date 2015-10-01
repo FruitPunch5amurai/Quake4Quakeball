@@ -49,7 +49,7 @@ idItem::idItem
 ================
 */
 idItem::idItem() {
-	spin = false;
+	spin = true;
 	inView = false;
 	skin = NULL;
 	pickupSkin = NULL;
@@ -722,7 +722,8 @@ bool idItem::Pickup( idPlayer *player ) {
 	// asalmon: Added option for a differnt respawn rate based on gametype.
 	float respawn = spawnArgs.GetFloat(va("respawn_%s",gameLocal.serverInfo.GetString( "si_gameType" )), "-1.0");
 	if( respawn == -1.0f ) {
-		respawn = spawnArgs.GetFloat( "respawn", "5.0" );
+		//Modded-> change item respawn time high so ball doesnt respawn after picking it up
+		respawn = spawnArgs.GetFloat( "respawn", "10000" );
 	}
 
 	bool no_respawn = spawnArgs.GetBool( "no_respawn" );

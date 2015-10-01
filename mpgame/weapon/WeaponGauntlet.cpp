@@ -238,7 +238,7 @@ void rvWeaponGauntlet::Attack ( void ) {
 	if (ent->IsType( idProjectile::GetClassType() ) && !(owner->inventory.HasAmmo("weapon_rocketlauncher")))
 	{
 		ent->PostEventMS( &EV_Remove, 0 );
-		owner->GiveItem("ammo_rocketlauncher");
+		owner->GiveItem("weapon_rocketlauncher");
 		return;
 	}
 

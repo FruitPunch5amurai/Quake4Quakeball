@@ -262,8 +262,8 @@ void idProjectile::Create( idEntity* _owner, const idVec3 &start, const idVec3 &
 
  	physicsObj.SetOrigin( start );
  	physicsObj.SetAxis( axis );
-
- 	physicsObj.GetClipModel()->SetOwner( ignore ? ignore : _owner );
+	//Modded-> So that player can touch projectile
+ 	//physicsObj.GetClipModel()->SetOwner( ignore ? ignore : _owner );
 	physicsObj.extraPassEntity = extraPassEntity;
 
 	owner = _owner;
@@ -640,6 +640,7 @@ idProjectile::Collide
 =================
 */
 bool idProjectile::Collide( const trace_t &collision, const idVec3 &velocity ) {
+	owner = NULL; // Modded -> Change owner when projectile collides
 	bool dummy = false;
 	return Collide( collision, velocity, dummy );
 }
@@ -760,13 +761,14 @@ bool idProjectile::Collide( const trace_t &collision, const idVec3 &velocity, bo
 		idDict dict;
 		idEntity *newEnt = NULL;
 
-		dict.Set("classname","weapon_rocketlauncher");
+		dict.Set("classname","moveable_item_rocketlauncher");
 		dict.Set("origin", launchOrig.ToString());
 		gameLocal.SpawnEntityDef(dict,&newEnt);
+		PostEventMS( &EV_Remove, 0 );
+
 		if (newEnt)	{
 		gameLocal.Printf("spawned entity '%s'\n", newEnt->name.c_str());
 	}
-	
 	}
  
 	// get the entity the projectile collided with
@@ -839,6 +841,7 @@ bool idProjectile::Collide( const trace_t &collision, const idVec3 &velocity, bo
 		return false;
 	} else if ( canDamage && ent->IsType( idActor::GetClassType() ) ) {
 		if ( !projectileFlags.detonate_on_actor ) {
+			owner = NULL; // Modded -> Change owner when ball collides with something else
 			return false;
 		}
 	} else {
@@ -892,6 +895,7 @@ bool idProjectile::Collide( const trace_t &collision, const idVec3 &velocity, bo
 					actualHitEnt->Damage( this, owner, dir, damageDefName, damagePower, CLIPMODEL_ID_TO_JOINT_HANDLE( collision.c.id ) );
 				}
 			}
+			owner = NULL; // Modded -> Change owner when ball collides with something else
 			return false;		
 		}
 	}
@@ -988,12 +992,13 @@ bool idProjectile::Collide( const trace_t &collision, const idVec3 &velocity, bo
 
 		// don't predict explosions on clients
 		if ( gameLocal.isClient ) {
+			owner = NULL; // Modded -> Change owner when ball collides with something else
 			return true;
 		}
 
 		Explode( &collision, false, ignore );
 	}
-
+	owner = NULL; // Modded -> Change owner when ball collides with something else
 	return true;
 }
 
