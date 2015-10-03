@@ -216,7 +216,7 @@ void rvWeaponGauntlet::Attack ( void ) {
 	gameLocal.TracePoint(	owner, tr, 
 							playerViewOrigin, 
 							playerViewOrigin + playerViewAxis[0] * range, 
-							16910853, owner ); //Modded
+							MASK_SHOT_RENDERMODEL, owner ); 
 // RAVEN END
 	owner->WeaponFireFeedback( &weaponDef->dict );
 
@@ -235,7 +235,7 @@ void rvWeaponGauntlet::Attack ( void ) {
 
 
 	// Modded ->  If the entity is a projectile and the player does not currently have the ball, add the ball to the player's inventory
-	if (ent->IsType( idProjectile::GetClassType() ) && !(owner->inventory.HasAmmo("weapon_rocketlauncher")))
+	if (ent->IsType( idProjectile::GetClassType() ) )
 	{
 		ent->PostEventMS( &EV_Remove, 0 );
 		owner->GiveItem("weapon_rocketlauncher");

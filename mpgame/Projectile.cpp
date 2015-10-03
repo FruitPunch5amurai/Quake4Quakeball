@@ -752,31 +752,41 @@ bool idProjectile::Collide( const trace_t &collision, const idVec3 &velocity, bo
 			//flyEffect->Event_Remove();
 		}
  		return true;
-	}else{
-	//Modded-> Spawn rocketlauncher when it hits .
+	}
+
+ 
+	// get the entity the projectile collided with
+	
+	ent = gameLocal.entities[ collision.c.entityNum ];
+	if ( ent == owner.GetEntity() ) {
+		//Modded-> Give rocketlauncher to player if projectile collides with a player entity
+		gameLocal.Printf("Get entity: '%s'\n", ent->GetClassname());
+		idPlayer *player = static_cast<idPlayer *>(ent);
+		gameLocal.Printf("bullet made contact with a player! \n");
+		player->GiveItem( "weapon_rocketlauncher");
+		PostEventMS( &EV_Remove, 0 );
+		gameLocal.Printf("Weapon given to player \n");
+		return true;
+	}
+	//Modded-> Spawn rocketlauncher when it hits a surface thats not a player .
+	if(!ent->IsType( idPlayer::GetClassType())){
+		gameLocal.Printf("Hit a surface!\n");
 		idVec3 newDir;
 		physicsObj.SetOrigin( physicsObj.GetOrigin() + idVec3( 0.0f, 0.0f, 32.0f ) );
 			physicsObj.SetAxis( newDir.ToMat3() );
 			launchOrig = physicsObj.GetOrigin();
 		idDict dict;
 		idEntity *newEnt = NULL;
-
 		dict.Set("classname","moveable_item_rocketlauncher");
 		dict.Set("origin", launchOrig.ToString());
 		gameLocal.SpawnEntityDef(dict,&newEnt);
 		PostEventMS( &EV_Remove, 0 );
-
 		if (newEnt)	{
 		gameLocal.Printf("spawned entity '%s'\n", newEnt->name.c_str());
 	}
-	}
- 
-	// get the entity the projectile collided with
-	
-	ent = gameLocal.entities[ collision.c.entityNum ];
-	if ( ent == owner.GetEntity() ) {
 		return true;
 	}
+
 	
 	
  	// just get rid of the projectile when it hits a player in noclip
