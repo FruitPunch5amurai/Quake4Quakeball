@@ -202,6 +202,7 @@ void rvCTF_AssaultPoint::Event_Touch( idEntity *activator, trace_t *trace ) {
 		gameLocal.mpGame.AddPlayerTeamScore( player, 2 );
 
 		((rvCTFGameState*)gameLocal.mpGame.GetGameState())->SetAPOwner( index, owner );
+		
 
 		ActivateTargets( this );
 

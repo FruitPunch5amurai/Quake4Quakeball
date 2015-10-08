@@ -722,8 +722,8 @@ bool idItem::Pickup( idPlayer *player ) {
 	// asalmon: Added option for a differnt respawn rate based on gametype.
 	float respawn = spawnArgs.GetFloat(va("respawn_%s",gameLocal.serverInfo.GetString( "si_gameType" )), "-1.0");
 	if( respawn == -1.0f ) {
-		//Modded-> change item respawn time high so ball doesnt respawn after picking it up
-		respawn = spawnArgs.GetFloat( "respawn", "10000" );
+		
+		respawn = spawnArgs.GetFloat( "respawn", "5.0" );
 	}
 
 	bool no_respawn = spawnArgs.GetBool( "no_respawn" );
@@ -2034,11 +2034,15 @@ bool rvItemCTFFlag::GiveToPlayer( idPlayer* player ) {
 	switch ( player->team ) {
 		default:
 		case TEAM_MARINE:
+			//modded
+			gameLocal.Printf("Flag picked up");
 			teamPowerup  = POWERUP_CTF_MARINEFLAG;
 			enemyPowerup = POWERUP_CTF_STROGGFLAG;
 			break;
 			
 		case TEAM_STROGG:
+			//modded
+			gameLocal.Printf("Flag Picked up");
 			teamPowerup  = POWERUP_CTF_STROGGFLAG;
 			enemyPowerup = POWERUP_CTF_MARINEFLAG;
 			break;
@@ -2187,9 +2191,11 @@ void rvItemCTFFlag::ResetFlag( int powerup ) {
 	if ( !gameLocal.isClient ) {
 		int team = -1;
 		if ( powerup == POWERUP_CTF_MARINEFLAG ) {
+			gameLocal.Printf("Scored");
 			team = TEAM_MARINE;
 		} else if ( powerup == POWERUP_CTF_STROGGFLAG ) {
 			team = TEAM_STROGG;
+			gameLocal.Printf("Scored");
 		} else if ( powerup == POWERUP_CTF_ONEFLAG ) {
 			team = TEAM_MAX;
 		}

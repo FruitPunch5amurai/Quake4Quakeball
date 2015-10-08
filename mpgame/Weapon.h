@@ -104,6 +104,8 @@ private:
 	rvWeapon*	weapon;
 };
 
+
+
 class rvWeapon : public idClass {
 public:
 
@@ -434,6 +436,7 @@ private:
 
 	CLASS_STATES_PROTOTYPE ( rvWeapon );
 };
+
 
 ID_INLINE rvViewWeapon* rvWeapon::GetViewModel ( void ) const {
 	return viewModel.GetEntity();
