@@ -2056,7 +2056,6 @@ bool rvItemCTFFlag::GiveToPlayer( idPlayer* player ) {
 	
 	// If the player runs over their own flag the only thing they
 	// can do is score or return it.
-
 	// when the player touches the one flag, he always gets it
 	if ( canPickup ) {
 		// If the flag was dropped, return it		
@@ -2068,14 +2067,12 @@ bool rvItemCTFFlag::GiveToPlayer( idPlayer* player ) {
 // squirrel: Mode-agnostic buymenus
 			player->GiveCash( (float)gameLocal.mpGame.mpBuyingManager.GetIntValueForKey( "playerCashAward_flagReturned", 0 ) );
 // RITUAL END
-		} else if ( player->PowerUpActive ( enemyPowerup ) ) {
+		} else if (player->GetCurrentWeapon() == 6 ) { //Modded->Only player with rocketlauncher currently equipped can score
 			// If they have the enemy flag then they score
 			if ( !gameLocal.mpGame.CanCapture ( player->team ) ) {
 				return false;
 			}
-			
 			ResetFlag( enemyPowerup );
-			
 			gameLocal.mpGame.FlagCaptured( player );
 		}
 		return false;
