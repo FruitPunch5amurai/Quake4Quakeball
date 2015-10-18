@@ -723,7 +723,7 @@ bool idItem::Pickup( idPlayer *player ) {
 	float respawn = spawnArgs.GetFloat(va("respawn_%s",gameLocal.serverInfo.GetString( "si_gameType" )), "-1.0");
 	if( respawn == -1.0f ) {
 		
-		respawn = spawnArgs.GetFloat( "respawn", "5.0" );
+		respawn = spawnArgs.GetFloat( "respawn", "25.0" );//Modded -> Spawn every 25 seconds
 	}
 
 	bool no_respawn = spawnArgs.GetBool( "no_respawn" );
@@ -2021,7 +2021,6 @@ bool rvItemCTFFlag::GiveToPlayer( idPlayer* player ) {
 	if ( !gameLocal.IsMultiplayer() ) {
 		return false;
 	}
-
 	if ( player->spectating || ((gameLocal.mpGame.GetGameState())->GetMPGameState() != GAMEON && (gameLocal.mpGame.GetGameState())->GetMPGameState() != SUDDENDEATH && !cvarSystem->GetCVarBool( "g_testCTF" )) ) {
 		return false;
 	}
@@ -2068,11 +2067,7 @@ bool rvItemCTFFlag::GiveToPlayer( idPlayer* player ) {
 			player->GiveCash( (float)gameLocal.mpGame.mpBuyingManager.GetIntValueForKey( "playerCashAward_flagReturned", 0 ) );
 // RITUAL END
 		} else if (player->GetCurrentWeapon() == 6 ) { //Modded->Only player with rocketlauncher currently equipped can score
-			// If they have the enemy flag then they score
-			if ( !gameLocal.mpGame.CanCapture ( player->team ) ) {
-				return false;
-			}
-			ResetFlag( enemyPowerup );
+			ResetFlag( teamPowerup );
 			gameLocal.mpGame.FlagCaptured( player );
 		}
 		return false;
@@ -2088,7 +2083,7 @@ bool rvItemCTFFlag::GiveToPlayer( idPlayer* player ) {
 // squirrel: Mode-agnostic buymenus
 	player->GiveCash( (float)gameLocal.mpGame.mpBuyingManager.GetIntValueForKey( "playerCashAward_flagStolen", 0 ) );
 // RITUAL END
-	return true;
+	return false; //Modded -> can never pickup flag
 }
 
 /*
