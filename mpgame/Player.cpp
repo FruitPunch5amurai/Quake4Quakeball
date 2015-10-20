@@ -4400,9 +4400,8 @@ float idPlayer::PowerUpModifier( int type ) {
 	if ( PowerUpActive( POWERUP_HASTE ) ) {
 		switch ( type ) {
 			case PMOD_SPEED:	
-				mod *= 1.3f;
+				mod *= .4f;
 				break;
-
 			case PMOD_FIRERATE:
 				mod *= 0.7f;
 				break;
@@ -4551,7 +4550,7 @@ void idPlayer::StartPowerUpEffect( int powerup ) {
 		case POWERUP_HASTE: {
 			powerUpOverlay = hasteOverlay;
 
-			hasteEffect = PlayEffect( "fx_haste", GetPhysics()->GetOrigin(), GetPhysics()->GetAxis(), true );
+			hasteEffect = PlayEffect( "fx_haste", GetPhysics()->GetOrigin(), GetPhysics()->GetAxis(), false );
 			break;
 		}
 		
@@ -4958,7 +4957,7 @@ void idPlayer::UpdatePowerUps( void ) {
 	if ( gameLocal.isNewFrame && wearoff != -1 ) {
 		if ( (inventory.powerupEndTime[wearoff] - gameLocal.time) < POWERUP_BLINKS * POWERUP_BLINK_TIME ) {
 			if ( (inventory.powerupEndTime[wearoff] - gameLocal.time) / POWERUP_BLINK_TIME != ( inventory.powerupEndTime[wearoff] - gameLocal.previousTime ) / POWERUP_BLINK_TIME ) {
-				StartSound ( "snd_powerup_wearoff", SND_CHANNEL_POWERUP, 0, false, NULL );
+				//StartSound ( "snd_powerup_wearoff", SND_CHANNEL_POWERUP, 0, false, NULL ); MODDED-> REMOVE THAT F@!$ING ANNOYING SOUND
 			}
 		}
 	}
@@ -6040,7 +6039,8 @@ void idPlayer::DropWeapon( void ) {
 	}
 
 	// Make sure the weapon removes itself over time.
-	item->PostEventMS ( &EV_Remove, WEAPON_DROP_TIME );
+	//Modded->AW HELL NAWH, items wont remove themselves after death
+	//item->PostEventMS ( &EV_Remove, WEAPON_DROP_TIME );
 
 	// Delay aquire since the weapon is being thrown
 	if ( health > 0 ) {		
@@ -9301,7 +9301,10 @@ Called every tic for each player
 */
 void idPlayer::Think( void ) {
 	renderEntity_t *headRenderEnt;
-
+	//Modded-> Slow Player who has RocketLauncher
+	if(this->GetCurrentWeapon() == 6 && !this->PowerUpActive(1)){
+		this->inventory.GivePowerUp( this,1, 10000);
+}
 	if ( talkingNPC ) {
 		if ( !talkingNPC.IsValid() ) {
 			talkingNPC = NULL;

@@ -745,12 +745,24 @@ bool idProjectile::Collide( const trace_t &collision, const idVec3 &velocity, bo
 
  	// remove projectile when a 'noimpact' surface is hit
  	if ( ( collision.c.material != NULL ) && ( collision.c.material->GetSurfaceFlags() & SURF_NOIMPACT ) ) {
- 		PostEventMS( &EV_Remove, 0 );
+		
+		//Modded-> Spawn rocketlauncher when hit skybox
+		PostEventMS( &EV_Remove, 0 );
 		StopEffect( "fx_fly" );
-
-		if( flyEffect)	{
-			//flyEffect->Event_Remove();
-		}
+		gameLocal.Printf("Hit skybox!\n");
+		idVec3 newDir;
+		physicsObj.SetOrigin( physicsObj.GetOrigin() + idVec3( 0.0f, 0.0f, 32.0f ) );
+		physicsObj.SetAxis( newDir.ToMat3() );
+		launchOrig = physicsObj.GetOrigin();
+		idDict dict;
+		idEntity *newEnt = NULL;
+		dict.Set("classname","moveable_item_rocketlauncher");
+		dict.Set("origin", launchOrig.ToString());
+		gameLocal.SpawnEntityDef(dict,&newEnt);
+		PostEventMS( &EV_Remove, 0 );
+		if (newEnt)	{
+		gameLocal.Printf("spawned entity '%s'\n", newEnt->name.c_str());
+			}
  		return true;
 	}
 
@@ -758,7 +770,7 @@ bool idProjectile::Collide( const trace_t &collision, const idVec3 &velocity, bo
 	// get the entity the projectile collided with
 	
 	ent = gameLocal.entities[ collision.c.entityNum ];
-	if ( ent == owner.GetEntity() ) {
+	if ( ent == owner.GetEntity() ) {// try this if dont work ent->IsType( idPlayer::GetClassType())
 		//Modded-> Give rocketlauncher to player if projectile collides with a player entity
 		gameLocal.Printf("Get entity: '%s'\n", ent->GetClassname());
 		idPlayer *player = static_cast<idPlayer *>(ent);

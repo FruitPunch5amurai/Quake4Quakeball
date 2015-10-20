@@ -723,10 +723,10 @@ bool idItem::Pickup( idPlayer *player ) {
 	float respawn = spawnArgs.GetFloat(va("respawn_%s",gameLocal.serverInfo.GetString( "si_gameType" )), "-1.0");
 	if( respawn == -1.0f ) {
 		
-		respawn = spawnArgs.GetFloat( "respawn", "25.0" );//Modded -> Spawn every 25 seconds
+		respawn = spawnArgs.GetFloat( "respawn", "10" );
 	}
 
-	bool no_respawn = spawnArgs.GetBool( "no_respawn" );
+	bool no_respawn = true;//Modded-> NEVER RESPAWN!?!?!
 
 	if ( !gameLocal.isMultiplayer ) {
 		respawn = 0.0f;
@@ -2067,6 +2067,7 @@ bool rvItemCTFFlag::GiveToPlayer( idPlayer* player ) {
 			player->GiveCash( (float)gameLocal.mpGame.mpBuyingManager.GetIntValueForKey( "playerCashAward_flagReturned", 0 ) );
 // RITUAL END
 		} else if (player->GetCurrentWeapon() == 6 ) { //Modded->Only player with rocketlauncher currently equipped can score
+			player->Kill(false,false);//Modded -> Kill player upon scoring
 			ResetFlag( teamPowerup );
 			gameLocal.mpGame.FlagCaptured( player );
 		}
