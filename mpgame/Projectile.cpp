@@ -756,7 +756,7 @@ bool idProjectile::Collide( const trace_t &collision, const idVec3 &velocity, bo
 		launchOrig = physicsObj.GetOrigin();
 		idDict dict;
 		idEntity *newEnt = NULL;
-		dict.Set("classname","moveable_item_rocketlauncher");
+		dict.Set("classname","weapon_rocketlauncher");
 		dict.Set("origin", launchOrig.ToString());
 		gameLocal.SpawnEntityDef(dict,&newEnt);
 		PostEventMS( &EV_Remove, 0 );

@@ -723,11 +723,10 @@ bool idItem::Pickup( idPlayer *player ) {
 	float respawn = spawnArgs.GetFloat(va("respawn_%s",gameLocal.serverInfo.GetString( "si_gameType" )), "-1.0");
 	if( respawn == -1.0f ) {
 		
-		respawn = spawnArgs.GetFloat( "respawn", "10" );
+		respawn = spawnArgs.GetFloat( "respawn", "60" );//modded -> a football spawns every minute
 	}
 
-	bool no_respawn = true;//Modded-> NEVER RESPAWN!?!?!
-
+	bool no_respawn = false;
 	if ( !gameLocal.isMultiplayer ) {
 		respawn = 0.0f;
 	} else if ( gameLocal.mpGame.IsBuyingAllowedInTheCurrentGameMode() ) {
